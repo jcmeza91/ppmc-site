@@ -1,5 +1,5 @@
 import React from 'react';
-import { jsonServerRestClient, Admin, Resource, Delete } from 'admin-on-rest';
+import { jsonServerRestClient, fetchUtils, Admin, Resource, Delete } from 'admin-on-rest';
 
 import { ClientList, EditClient, CreateClient } from './client';
 import { CrewList, EditCrew, CreateCrew } from './crew';
@@ -31,8 +31,19 @@ import ShipIcon from 'material-ui/svg-icons/maps/directions-boat';
 import SpecieIcon from 'material-ui/svg-icons/action/store';
 import TripIcon from 'material-ui/svg-icons/action/today';
 
+//Authentication Header
+const httpClient = (url, options = {}) => {
+    options.user = {
+        authenticated: true,
+        token: 'Basic UFBNQzpQUE1D'
+    }
+    return fetchUtils.fetchJson(url, options);
+}
+
+const restClient = jsonServerRestClient('http://127.0.0.1:3000/api/2', httpClient);
+
 const App = () => (
-    <Admin authClient={authClient} dashboard={Home} title="PPMC" restClient={jsonServerRestClient('http://127.0.0.1:3000/api/2')}>
+    <Admin authClient={authClient} dashboard={Home} title="PPMC" restClient={restClient}>
         
         //
         <Resource name="cliente" list={ClientList} edit={EditClient} create={CreateClient} remove={Delete} icon={ClientIcon} />
